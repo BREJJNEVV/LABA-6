@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,19 +16,40 @@ namespace LABA_6
         public Form1()
         {
             InitializeComponent();
+            saveFileDialog1.Filter = "Text File(*.txt)|*.txt";
+            
         }
-
-        public interface IDialogService
-        {
-            void ShowMessage(string message);   // показ сообщения
-            string FilePath { get; set; }   // путь к выбранному файлу
-            bool OpenFileDialog();  // открытие файла
-            bool SaveFileDialog();  // сохранение файла
-        }
+        string filename;
+        
 
         private void toolStripMenuItem6_Click(object sender, EventArgs e)
         {
-            openFileDialog1.OpenFile();
+            if (openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            string filename = openFileDialog1.FileName;
+            string fileText = File.ReadAllText(filename);
+            richTextBox1.Text = fileText;
+            MessageBox.Show("Готово");
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBoxButtons msb = MessageBoxButtons.YesNo;
+            String message = "Вы действительно хотите выйти?";
+            String caption = "Выход";
+            if (MessageBox.Show(message, caption, msb) == DialogResult.Yes)
+                this.Close();
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            filename = saveFileDialog1.FileName;
+            if (saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+           
+            
+            File.WriteAllText(filename,richTextBox1.Text);
+            MessageBox.Show("Готово");
         }
     }
 }
